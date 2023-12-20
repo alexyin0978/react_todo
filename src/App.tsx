@@ -54,9 +54,11 @@ process:
 3. create ChildTodo, add isChecked state to control the checkbox
 4. map childTodoList and render ChildTodo inside ParentTodo
 
-5. pass isParentChecked as key and prop to ChildTodo in order to control childTodo state by parent
+5. pass isParentChecked as key and prop to ChildTodo in order to allow ParentTodo to control ChildTodo
 
-6. when child check, update childCheckListLength, if childCheckListLength === todo.child.length, check/uncheck parent
+6. when child check, update childCheckListLength
+if childCheckListLength === todo.child.length, check parent
+if childCheckListLength === 0, uncheck parent
 */
 
 function App() {
@@ -78,17 +80,17 @@ const ParentCheckbox = ({ todo }: { todo: Todo }) => {
 
   const onChildCheck = (isChildChecked: boolean) => {
     if (isChildChecked) {
-      const nextChildCheckedLength = childCheckedLength + 1;
-      setChildCheckedLength(nextChildCheckedLength);
+      const newChildCheckedLength = childCheckedLength + 1;
+      setChildCheckedLength(newChildCheckedLength);
 
-      if (nextChildCheckedLength === 3) {
+      if (newChildCheckedLength === childLength) {
         setIsChecked(true);
       }
     } else {
-      const nextChildCheckedLength = childCheckedLength - 1;
-      setChildCheckedLength(nextChildCheckedLength);
+      const newChildCheckedLength = childCheckedLength - 1;
+      setChildCheckedLength(newChildCheckedLength);
 
-      if (nextChildCheckedLength === 0) {
+      if (newChildCheckedLength === 0) {
         setIsChecked(false);
       }
     }
@@ -98,14 +100,13 @@ const ParentCheckbox = ({ todo }: { todo: Todo }) => {
     const nextState = !isChecked;
     setIsChecked(nextState);
 
-    if (nextState) {
+    if (nextState === true) {
       setChildCheckedLength(childLength);
     } else {
       setChildCheckedLength(0);
     }
   };
 
-  console.log("childCheckedLength: ", childCheckedLength);
   return (
     <div>
       <label style={{ color: "yellow" }}>
